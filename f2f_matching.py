@@ -28,8 +28,12 @@ class f2f():
     def run_pipeline(self):
         self.m_ref = self.temporal_sort(self.m_ref)
         self.m_ref = self.m_ref[100:200]
-        #print(f"m_ref: {self.m_ref[0:10]}")
         plot_images([read_image(images / r) for r in self.m_ref[0:2]], dpi=50)
+        kps_list_ = [] 
+        for r in self.m_ref:
+            kps = get_keypoints(features, r)
+            kps_list_.append(kps)    
+        plot_keypoints(kps_list_, colors = "red",  ps = 10)
         plt.waitforbuttonpress()
     
 
