@@ -27,10 +27,10 @@ class f2f():
 
     def run_pipeline(self):
         self.m_ref = self.temporal_sort(self.m_ref)
-        self.m_ref = self.m_ref[100:200]
-        plot_images([read_image(images / r) for r in self.m_ref[0:2]], dpi=50)
+        t_ref = self.m_ref[100:102]
+        plot_images([read_image(images / r) for r in t_ref], dpi=50)
         kps_list_ = [] 
-        for r in self.m_ref:
+        for r in t_ref:
             kps = get_keypoints(features, r)
             kps_list_.append(kps)    
         plot_keypoints(kps_list_, colors = "red",  ps = 10)
