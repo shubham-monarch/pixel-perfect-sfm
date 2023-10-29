@@ -17,9 +17,7 @@ class f2f():
         self.outputs = outputs
         self.features = features
         self.matches = matches
-        #masked_references
         self.m_ref = [str(p.relative_to(images)) for i, p in enumerate((images / 'masked_images/').iterdir())] 
-        #trimming the list of masked references
         
     '''sorts the files in items by the temporal order of the file names'''
     def temporal_sort(self, item):
@@ -49,11 +47,11 @@ class f2f():
         t_ref = self.m_ref[100:105]
         en = len(t_ref)
     
-        for i in range(en - 1):
-            plot_images([read_image(images / t_ref[r]) for r in [i ,i+1]], dpi=50)
+        for i in range(1, en):
+            plot_images([read_image(images / t_ref[r]) for r in [i,i-1]], dpi=50)
             kps1 = get_keypoints(features, t_ref[i])
-            kps2 = get_keypoints(features, t_ref[i+1])
-            mkp1, mkp2 = self.get_matches(t_ref, self.matches, i, i+1)
+            kps2 = get_keypoints(features, t_ref[i-1])
+            mkp1, mkp2 = self.get_matches(t_ref, self.matches, i, i-1)
             plot_matches(mkp1, mkp2)
             plt.waitforbuttonpress()
             plt.close()
@@ -74,7 +72,7 @@ if __name__ == "__main__":
     f2f_ = f2f(images, outputs, features, matches)
     f2f_.run_pipeline()
     #with h5py.File(matches, 'r') as f: 
-      #  f.visititems(print_summary)
+     #   f.visititems(print_summary)
     #f2f_.get_matches();
 
 
