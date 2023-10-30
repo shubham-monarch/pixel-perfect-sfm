@@ -37,7 +37,7 @@ class f2f():
             matches_ = f[p_key][c_key]['matches0'][:]
             score_ = f[p_key][c_key]['matching_scores0'][:]
             #valid = (matches_ > -1 and score_ > 0.5)
-            valid = np.logical_and(matches_ > -1, score_ > 0.8)
+            valid = np.logical_and(matches_ > -1, score_ > 0.3)
             mkp1 = p_kps[valid]
             mkp2 = c_kps[matches_[valid]]
             return mkp1, mkp2
