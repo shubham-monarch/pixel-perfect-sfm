@@ -6,6 +6,11 @@ pixsfm/features/models/checkpoints/
 *.pth
 .ipynb_checkpoints
 
+*.ipynb_checkpoints/
+*.ipynb_checkpoints
+**/*.ipynb
+**/_output/
+
 lsf*
 .vscode/
 .DS_Store
