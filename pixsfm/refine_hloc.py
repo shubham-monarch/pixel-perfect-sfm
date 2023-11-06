@@ -33,7 +33,7 @@ class PixSfM(PixSfM_colmap):
             cache_path: Optional[Path] = None,
             feature_manager: Optional[FeatureManager] = None,
             **hloc_args):
-
+        logger.info("Inside the run function of PixSfM.")
         output_dir.mkdir(exist_ok=True, parents=True)
         cache_path = self.resolve_cache_path(cache_path, output_dir)
 
@@ -100,6 +100,7 @@ class PixSfM(PixSfM_colmap):
             matches_path: Path,
             reference_model_path: Optional[Path] = None,
             **hloc_args):
+        logger.info("Inside run_reconstruction function of PixSfM.")
         if hloc is None:
             raise ValueError("Could not import hloc.")
         model_path = output_dir / "hloc"
@@ -109,6 +110,7 @@ class PixSfM(PixSfM_colmap):
                 model_path, image_dir, pairs_path, keypoints_path,
                 matches_path, **hloc_args)
         else:
+            logger.info("reference_model_path is not None.")
             hloc.triangulation.main(
                 model_path, reference_model_path, image_dir, pairs_path,
                 keypoints_path, matches_path, **hloc_args)
@@ -125,6 +127,7 @@ class PixSfM(PixSfM_colmap):
             cache_path: Optional[Path] = None,
             feature_manager: Optional[FeatureManager] = None,
             **hloc_args):
+        logger.info("Inside the triangulation function of PixSfM.")
         return self.run(
             output_dir, image_dir, pairs_path, features_path, matches_path,
             reference_model_path=reference_model_path, cache_path=cache_path,
