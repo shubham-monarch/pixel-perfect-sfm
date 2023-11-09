@@ -10,6 +10,13 @@ import numpy as np
 import os
 import h5py
 
+'''helper function for hd5 files'''
+def print_summary(name, obj):
+    if isinstance(obj, h5py.Dataset):
+        print(f"Dataset: {name} (shape={obj.shape}, dtype={obj.dtype})")
+    elif isinstance(obj, h5py.Group):
+        print(f"Group: {name}")
+
 
 class f2f():
     def __init__(self, images, ouputs, features, matches):  
@@ -47,7 +54,7 @@ class f2f():
         t_ref = self.m_ref[100:105]
         en = len(t_ref)
     
-        for i in range(1, en):
+        '''for i in range(1, en):
             plot_images([read_image(images / t_ref[r]) for r in [i,i-1]], dpi=50)
             kps1 = get_keypoints(features, t_ref[i])
             kps2 = get_keypoints(features, t_ref[i-1])
@@ -55,12 +62,19 @@ class f2f():
             plot_matches(mkp1, mkp2)
             plt.waitforbuttonpress()
             plt.close()
+        '''
 
-def print_summary(name, obj):
-    if isinstance(obj, h5py.Dataset):
-        print(f"Dataset: {name} (shape={obj.shape}, dtype={obj.dtype})")
-    elif isinstance(obj, h5py.Group):
-        print(f"Group: {name}")
+    def triangulate_points(self):
+        #print("Inside triangulate_points")
+        self.m_ref = self.temporal_sort(self.m_ref)
+        t_ref = self.m_ref[100:200]
+        mkp1, mkp2 = self.get_matches(t_ref, self.matches, 10, 7)
+        print(f"mkp1: {mkp1.shape}, mkp2: {mkp2.shape}")
+        print(f"type(mkp1): {type(mkp1)}, type(mkp2): {type(mkp2)}")
+
+        for i in range(0,5):
+            print(f"kp1 : {mkp1[i]} kp2: {mkp2[i]}")
+
 
 
 if __name__ == "__main__":
@@ -70,7 +84,8 @@ if __name__ == "__main__":
     features = outputs / 'features.h5'
     matches = outputs / 'matches.h5'
     f2f_ = f2f(images, outputs, features, matches)
-    f2f_.run_pipeline()
+    #f2f_.run_pipeline()
+    f2f_.triangulate_points()
     #with h5py.File(matches, 'r') as f: 
      #   f.visititems(print_summary)
     #f2f_.get_matches();
