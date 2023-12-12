@@ -100,6 +100,7 @@ class PixSfM(PixSfM_colmap):
             matches_path: Path,
             reference_model_path: Optional[Path] = None,
             **hloc_args):
+        print("Inside run_reconstruction function of PixSFMs")
         logger.info("Inside run_reconstruction function of PixSfM.")
         if hloc is None:
             raise ValueError("Could not import hloc.")
