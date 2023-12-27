@@ -8,7 +8,7 @@ pixsfm/features/models/checkpoints/
 
 *.ipynb_checkpoints/
 *.ipynb_checkpoints
-**/*.ipynb
+#**/*.ipynb
 **/_output/
 
 lsf*
