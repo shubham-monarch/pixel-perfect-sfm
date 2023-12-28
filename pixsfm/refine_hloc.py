@@ -37,6 +37,9 @@ class PixSfM(PixSfM_colmap):
         output_dir.mkdir(exist_ok=True, parents=True)
         cache_path = self.resolve_cache_path(cache_path, output_dir)
 
+        print(f"self.conf.KA.apply: {self.conf.KA.apply}")
+        logger.info(f"self.conf.KA.apply: {self.conf.KA.apply}")
+        
         if self.conf.KA.apply:
             keypoints_path = output_dir / "refined_keypoints.h5"
             _, ka_data, feature_manager = self.refine_keypoints(
@@ -100,11 +103,10 @@ class PixSfM(PixSfM_colmap):
             matches_path: Path,
             reference_model_path: Optional[Path] = None,
             **hloc_args):
-        print("Inside run_reconstruction function of PixSFMs")
-        logger.info("Inside run_reconstruction function of PixSfM.")
         if hloc is None:
             raise ValueError("Could not import hloc.")
         model_path = output_dir / "hloc"
+        logger.info(f"model_path: {model_path.as_posix()}")
         model_path.mkdir(exist_ok=True, parents=False)
         if reference_model_path is None:
             hloc.reconstruction.main(
