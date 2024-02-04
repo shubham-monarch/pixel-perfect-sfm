@@ -86,12 +86,20 @@ class PixSfM:
             cache_path: Optional[Path] = None,
             feature_manager: Optional[FeatureManager] = None):
         cache_path = self.resolve_cache_path(cache_path)
+        
+        logger.info("[pixSFM] => run_ba function!")
+        
         if feature_manager is None:
+            logger.info("[pixSFM] => feature_manager is None!")
+            logger.info("[pixSFM] => Before extract.features_from_reconstruction!")
             feature_manager = extract.features_from_reconstruction(
                     self.extractor, reconstruction, image_dir,
                     cache_path=cache_path)
+            logger.info("[pixSFM] => After extract.features_from_reconstruction!")
+        logger.info("[pixSFM] => Before bundle_adjuster.refine_multilevel!")
         ba_data = self.bundle_adjuster.refine_multilevel(
                 reconstruction, feature_manager)
+        logger.info("[pixSFM] => After self.bundle_adjuster.refine_multilevel!")
         return reconstruction, ba_data, feature_manager
 
     def refine_keypoints_from_db(

@@ -55,16 +55,25 @@ class PixSfM(PixSfM_colmap):
                 matches_path, reference_model_path,
                 **hloc_args)
 
+        logger.info("[pixSFM/run]")
+
         reconstruction = pycolmap.Reconstruction(str(model_path))
+        
+        logger.info("[pixSFM/run] created reconstruction object!")
+        
         if self.conf.BA.apply:
+            logger.info("self.conf.BA.apply is True!")
             reconstruction, ba_data, feature_manager = self.run_ba(
                     reconstruction, image_dir,
                     cache_path=cache_path, feature_manager=feature_manager)
         else:
+            logger.info("self.conf.BA.apply is False!")
             ba_data = None
 
+        logger.info("[pixSFM/run] calling reconstruction.write!")
         reconstruction.write(str(output_dir))
-
+        logger.info("[pixSFM/run] reconstruction.write done!")
+        
         outputs = {
             "feature_manager": feature_manager,
             "KA": ka_data,
@@ -109,6 +118,7 @@ class PixSfM(PixSfM_colmap):
         logger.info(f"model_path: {model_path.as_posix()}")
         model_path.mkdir(exist_ok=True, parents=False)
         if reference_model_path is None:
+            logger.info("reference_model_path is None.")
             hloc.reconstruction.main(
                 model_path, image_dir, pairs_path, keypoints_path,
                 matches_path, **hloc_args)
@@ -117,6 +127,8 @@ class PixSfM(PixSfM_colmap):
             hloc.triangulation.main(
                 model_path, reference_model_path, image_dir, pairs_path,
                 keypoints_path, matches_path, **hloc_args)
+        logger.info("PixSFM => run_reconstruction method!")
+        logger.info(f"returning model_path => {model_path}")
         return model_path
 
     def triangulation(

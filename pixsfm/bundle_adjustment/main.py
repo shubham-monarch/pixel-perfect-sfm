@@ -7,7 +7,8 @@ from .. import features
 from .._pixsfm import _bundle_adjustment as ba
 from ..util.misc import to_ctr, to_optim_ctr
 from ..base import interpolation_default_conf, solver_default_conf
-
+from pixsfm import logger
+#import importlib
 
 def default_problem_setup(reconstruction):
     reg_image_ids = reconstruction.reg_image_ids()
@@ -78,27 +79,38 @@ class BundleAdjuster:
             reconstruction: pycolmap.Reconstruction,
             feature_set: features.FeatureSet,
             problem_setup: Optional[ba.BundleAdjustmentSetup] = None):
+        logger.info("[BundleAdjuster] => refine function!")
         raise NotImplementedError()
 
     def refine_multilevel(self, reconstruction, feature_manager,
                           problem_setup=None):
+        #logger = importlib.import_module("pixsfm.logger")
         # Optimize level order sequentially.
         # Default is reversed.
+        logger.info("[pixSFM] => refine_multilevel function!")
         levels = self.conf.level_indices if self.conf.level_indices not in \
             [None, "all"] else \
             list(reversed(range(feature_manager.num_levels)))
 
+        logger.info(f"levels: {levels} len(levels): {len(levels)}")
+
         outputs = {}
         for level_index in levels:
+            logger.info(f"level_index: {level_index}")
+            logger.info("Before self.refine function!")
             out = self.refine(
                 reconstruction, feature_manager.fset(level_index),
                 problem_setup)
+            logger.info("After self.refine function!s")
+
             for k, v in out.items():
+                logger.info("k: {k}, v: {v}")
                 if k in outputs.keys():
+                    logger.info(f"k: {k}")
                     outputs[k].append(v)
                 else:
                     outputs[k] = [v]
-
+        logger.info("[pixSFM] => exiting refine_multilevel function!")
         return outputs
 
 
@@ -119,25 +131,32 @@ class FeatureReferenceBundleAdjuster(BundleAdjuster):
             reconstruction: pycolmap.Reconstruction,
             feature_set: features.FeatureSet,
             problem_setup: Optional[ba.BundleAdjustmentSetup] = None):
+        logger.info("[FeatureReferenceBundleAdjuster] => refine called")
         if problem_setup is None:
+            logger.info("problem_setup is None")
             problem_setup = default_problem_setup(reconstruction)
         # @TODO: req_point3D_ids from problem setup
 
         # Load all features (avoid duplicate loading, since anyway all
         # features are required in RAM during bundle adjustment)
+        logger.info("Before features.FeatureView")
         feature_view = features.FeatureView(
             feature_set,
             reconstruction
         )
 
         # Schedule reference computation (label for each point3D)
+        logger.info("Before find_problem_labels")
         problem_labels = find_problem_labels(reconstruction,
                                              self.conf.max_tracks_per_problem)
 
         # Extract feature reference for each p3D using IRLS
+        logger.info("Before ba.ReferenceExtractor")
         ref_extractor = ba.ReferenceExtractor(
                             to_ctr(self.conf.references),
                             to_ctr(self.conf.interpolation))
+        
+        logger.info("Before ref.extractor!")
         references = ref_extractor.run(
                         problem_labels,
                         reconstruction,
@@ -145,12 +164,16 @@ class FeatureReferenceBundleAdjuster(BundleAdjuster):
 
         # solve feature-metric bundle adjustment towards
         # fixed references
+        logger.info("Before ba.FeatureReferenceBundleOptimizer")
         solver = ba.FeatureReferenceBundleOptimizer(
                     to_optim_ctr(self.conf.optimizer, self.callbacks),
                     problem_setup,
                     to_ctr(self.conf.interpolation))
+        
+        logger.info("Before solver.run")
         solver.run(reconstruction, feature_view, references)
 
+        logger.info("Returning references and summary!")
         return {"references": references, "summary": solver.summary()}
 
 
