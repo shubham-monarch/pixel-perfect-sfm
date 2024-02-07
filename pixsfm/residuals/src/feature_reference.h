@@ -1,8 +1,12 @@
 #pragma once
 
 #include <ceres/ceres.h>
-#include <colmap/base/projection.h>
-#include <colmap/base/reconstruction.h>
+
+#include <colmap/scene/projection.h>
+#include <colmap/scene/reconstruction.h>
+
+//#include <colmap/base/projection.h>
+//#include <colmap/base/reconstruction.h>
 #include <colmap/util/types.h>
 
 #include "features/src/featurepatch.h"
@@ -223,7 +227,7 @@ ceres::CostFunction* CreateFeatureReferenceCostFunctor(
     InterpolationConfig& interpolation_config) {
   switch (camera_model_id) {
 #define CAMERA_MODEL_CASE(CameraModel)                               \
-  case colmap::CameraModel::kModelId:                                \
+  case static_cast<int>(colmap::CameraModel::model_id):                                \
     return FeatureReferenceCostFunctor<                              \
         colmap::CameraModel, dtype, CHANNELS, N_NODES,               \
         OUT_CHANNELS>::Create(patch, interpolation_config,           \
@@ -241,7 +245,7 @@ ceres::CostFunction* CreateFeatureReferenceConstantPoseCostFunctor(
     const double* node_offsets3D, InterpolationConfig& interpolation_config) {
   switch (camera_model_id) {
 #define CAMERA_MODEL_CASE(CameraModel)                                 \
-  case colmap::CameraModel::kModelId:                                  \
+  case static_cast<int>(colmap::CameraModel::model_id):                                  \
     return FeatureReferenceConstantPoseCostFunctor<                    \
         colmap::CameraModel, dtype, CHANNELS, N_NODES,                 \
         OUT_CHANNELS>::Create(patch, interpolation_config, qvec, tvec, \

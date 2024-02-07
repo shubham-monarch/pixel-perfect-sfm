@@ -80,7 +80,7 @@ int CostMapBundleOptimizer::AddResiduals(const colmap::image_t image_id,
                                          ceres::LossFunction* loss_function,
                                          FeatureView<dtype>& feature_view) {
   const bool constant_pose =
-      !options_.refine_extrinsics || setup_.HasConstantPose(image_id);
+      !options_.refine_extrinsics || setup_.HasConstantCamPose(image_id);
 
   colmap::Image& image = reconstruction->Image(image_id);
   colmap::Camera& camera = reconstruction->Camera(image.CameraId());
@@ -91,20 +91,25 @@ int CostMapBundleOptimizer::AddResiduals(const colmap::image_t image_id,
     return 0;
   }
 
-  colmap::point3D_t point3D_id = point2D.Point3DId();
+  colmap::point3D_t point3D_id = point2D.point3D_id;
   colmap::Point3D& point3D = reconstruction->Point3D(point3D_id);
 
-  double* qvec_data = image.Qvec().data();
-  double* tvec_data = image.Tvec().data();
-  double* camera_params_data = camera.ParamsData();
-  double* xyz = point3D.XYZ().data();
+  //double* qvec_data = image.Qvec().data();
+  //double* tvec_data = image.Tvec().data();
+
+  double* qvec_data = image.CamFromWorld().rotation.coeffs().data();
+  double *tvec_data = image.CamFromWorld().translation.data();
+
+
+  double* camera_params_data = &camera.params[0];
+  double* xyz = point3D.xyz.data();
 
   ceres::ResidualBlockId block_id;
 
   if (constant_pose) {
     ceres::CostFunction* cost_function =
         CreateFeatureReferenceConstantPoseCostFunctor<CHANNELS, 1, -1>(
-            camera.ModelId(), qvec_data, tvec_data,
+            camera.model_id, qvec_data, tvec_data,
             feature_view.GetFeaturePatch(image_id, point2D_idx),
             nullptr,  // Just minimize
             nullptr, interpolation_config_);
@@ -113,7 +118,7 @@ int CostMapBundleOptimizer::AddResiduals(const colmap::image_t image_id,
   } else {
     ceres::CostFunction* cost_function =
         CreateFeatureReferenceCostFunctor<CHANNELS, 1, -1>(
-            camera.ModelId(),
+            camera.model_id,
             feature_view.GetFeaturePatch(image_id, point2D_idx),
             nullptr,  // Just minimize
             nullptr, interpolation_config_);

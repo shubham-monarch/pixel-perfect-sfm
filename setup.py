@@ -59,7 +59,8 @@ class CMakeBuild(build_ext):
             os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                       '-DPYTHON_EXECUTABLE=' + sys.executable,
-                      '-DTESTS_ENABLED=OFF']
+                      '-DTESTS_ENABLED=OFF',
+                      '-DCMAKE_CUDA_ARCHITECTURES=all']
 
         avx2_enabled = os.environ.get("AVX2_ENABLED")
         if avx2_enabled is not None:

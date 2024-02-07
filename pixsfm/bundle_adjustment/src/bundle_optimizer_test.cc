@@ -33,9 +33,15 @@
 #define TEST_NAME "bundle_adjustment/bundle_optimizer"
 #include <colmap/util/testing.h>
 
-#include <colmap/base/camera_models.h>
+/*#include <colmap/base/camera_models.h>
 #include <colmap/base/correspondence_graph.h>
 #include <colmap/base/projection.h>
+*/
+
+#include <colmap/sensor/models.h>
+#include <colmap/scene/correspondence_graph.h>
+#include <colmap/scene/projection.h>
+
 #include <colmap/optim/bundle_adjustment.h>
 #include <colmap/util/random.h>
 
@@ -106,10 +112,11 @@ void GenerateReconstruction(const size_t num_images, const size_t num_points,
 
     std::vector<Eigen::Vector2d> points2D;
     for (const auto& point3D : reconstruction->Points3D()) {
-      BOOST_CHECK(HasPointPositiveDepth(proj_matrix, point3D.second.XYZ()));
+      BOOST_CHECK(HasPointPositiveDepth(proj_matrix, point3D.second.xyz));
       // Get exact projection of 3D point.
-      Eigen::Vector2d point2D =
-          ProjectPointToImage(point3D.second.XYZ(), proj_matrix, camera);
+      //Eigen::Vector2d point2D = ProjectPointToImage(point3D.second.xyz, proj_matrix, camera);
+      Eigen::Vector2d point2D = camera.ImgFromCam((proj_matrix* point3D.second.xyz).hnormalized());
+    
       // Add some uniform noise.
       point2D += Eigen::Vector2d(RandomReal(-2.0, 2.0), RandomReal(-2.0, 2.0));
       points2D.push_back(point2D);
@@ -150,13 +157,13 @@ void CompareReconstructions(colmap::Reconstruction* reconstruction1,
   for (auto& camera_pair : reconstruction1->Cameras()) {
     auto& camera1 = camera_pair.second;
     auto& camera2 = reconstruction2->Camera(camera_pair.first);
-    BOOST_CHECK_ALL_CLOSE(camera1.Params(), camera2.Params());
+    BOOST_CHECK_ALL_CLOSE(camera1.params, camera2.params);
   }
 
   for (auto& point_pair : reconstruction1->Points3D()) {
     auto& point3D1 = point_pair.second;
     auto& point3D2 = reconstruction2->Point3D(point_pair.first);
-    BOOST_CHECK_ALL_CLOSE(point3D1.XYZ(), point3D2.XYZ());
+    BOOST_CHECK_ALL_CLOSE(point3D1.xyz, point3D2.xyz);
   }
 }
 
@@ -213,7 +220,7 @@ BOOST_AUTO_TEST_CASE(TestTwoViewConstantCamera) {
   config.AddImage(1);
   config.SetConstantPose(0);
   config.SetConstantPose(1);
-  config.SetConstantCamera(0);
+  config.SetConstantCamIntrinsics(0);
 
   colmap::BundleAdjustmentOptions options;
   TestBA(reconstruction, options, config);

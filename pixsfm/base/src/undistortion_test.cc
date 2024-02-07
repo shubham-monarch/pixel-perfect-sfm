@@ -2,8 +2,8 @@
 #define TEST_NAME "base/undistortion"
 #include <colmap/util/testing.h>
 
-#include <colmap/base/undistortion.h>
-
+//#include <colmap/base/undistortion.h>
+#include <colmap/image/undistortion.h>
 #include "base/src/undistortion.h"
 
 namespace pixsfm {

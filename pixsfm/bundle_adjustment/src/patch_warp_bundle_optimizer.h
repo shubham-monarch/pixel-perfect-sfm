@@ -99,7 +99,7 @@ int PatchWarpBundleOptimizer::AddResiduals(
     FeatureView<dtype>& feature_view,
     std::unordered_map<colmap::point3D_t, Reference>& references) {
   const bool constant_pose =
-      !options_.refine_extrinsics || setup_.HasConstantPose(image_id);
+      !options_.refine_extrinsics || setup_.HasConstantCamPose(image_id);
 
   colmap::Image& image = reconstruction->Image(image_id);
   colmap::Camera& camera = reconstruction->Camera(image.CameraId());
@@ -110,13 +110,18 @@ int PatchWarpBundleOptimizer::AddResiduals(
     return 0;
   }
 
-  colmap::point3D_t point3D_id = point2D.Point3DId();
+  colmap::point3D_t point3D_id = point2D.point3D_id;
   colmap::Point3D& point3D = reconstruction->Point3D(point3D_id);
 
-  double* qvec_data = image.Qvec().data();
-  double* tvec_data = image.Tvec().data();
-  double* camera_params_data = camera.ParamsData();
-  double* xyz = point3D.XYZ().data();
+  //double* qvec_data = image.Qvec().data();
+  //double* tvec_data = image.Tvec().data();
+
+  double* qvec_data = image.CamFromWorld().rotation.coeffs().data();
+  double *tvec_data = image.CamFromWorld().translation.data();
+  
+
+  double* camera_params_data = &camera.params[0];
+  double* xyz = point3D.xyz.data();
 
   ceres::ResidualBlockId block_id;
 
@@ -126,16 +131,21 @@ int PatchWarpBundleOptimizer::AddResiduals(
   colmap::Image& src_image = reconstruction->Image(src_image_id);
   colmap::Camera& src_camera = reconstruction->Camera(src_image.CameraId());
 
-  double* src_qvec_data = src_image.Qvec().data();
-  double* src_tvec_data = src_image.Tvec().data();
-  double* src_camera_params_data = src_camera.ParamsData();
+  //double* src_qvec_data = src_image.Qvec().data();
+  //double* src_tvec_data = src_image.Tvec().data();
+
+  double* src_qvec_data = src_image.CamFromWorld().rotation.coeffs().data();
+  double* src_tvec_data = src_image.CamFromWorld().translation.data();
+
+
+  double* src_camera_params_data = &src_camera.params[0];
 
   if (src_image_id == image_id) {
     // INTERNAL FUNCTION //
     if (src_point2D_idx == point2D_idx && options_.regularize_source) {
       ceres::CostFunction* cost_function =
           CreateFeatureReferenceCostFunctor<CHANNELS, N_NODES, -1>(
-              camera.ModelId(),
+              camera.model_id,
               feature_view.GetFeaturePatch(image_id, src_point2D_idx),
               references.at(point3D_id).DescriptorData(),
               references.at(point3D_id).NodeOffsets3DData(),
@@ -152,11 +162,11 @@ int PatchWarpBundleOptimizer::AddResiduals(
     // TODO: reduced system when poses are fixed
     // ATM: Just set pose parameters constant (see bundle_adjuster.h)
 
-    if (camera.CameraId() == src_camera.CameraId()) {
+    if (camera.camera_id == src_camera.camera_id){
       // Shared intrinsics
       ceres::CostFunction* cost_function =
           CreateFeatureMetricSharedIntrinsicsCostFunctor<CHANNELS, N_NODES>(
-              camera.ModelId(),
+              camera.model_id,
               feature_view.GetFeaturePatch(image_id, point2D_idx),
               feature_view.GetFeaturePatch(src_image_id, src_point2D_idx),
               interpolation_config_);
@@ -166,9 +176,9 @@ int PatchWarpBundleOptimizer::AddResiduals(
     } else {
       ceres::CostFunction* cost_function =
           CreateFeatureMetricCostFunctor<CHANNELS, N_NODES>(
-              camera.ModelId(),
+              camera.model_id,
               feature_view.GetFeaturePatch(image_id, point2D_idx),
-              src_camera.ModelId(),
+              src_camera.model_id,
               feature_view.GetFeaturePatch(src_image_id, src_point2D_idx),
               interpolation_config_);
       block_id = problem_->AddResidualBlock(

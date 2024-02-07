@@ -2,6 +2,7 @@
 
 #include "util/src/memory.h"
 
+
 namespace pixsfm {
 
 template <typename dtype>
@@ -71,7 +72,10 @@ template <typename dtype>
 FeatureView<dtype>::FeatureView(FeatureSet<dtype>* feature_set,
                                 const colmap::Reconstruction* reconstruction)
     : feature_set_(feature_set) {
+  
+  std::cout << "Inside FeatureView class constructor!" << std::endl;
   for (const colmap::image_t& image_id : reconstruction->RegImageIds()) {
+    std::cout << "image_id: " << image_id << std::endl;
     if (reconstruction->Image(image_id).NumPoints3D() == 0) {
       continue;
     }
@@ -87,6 +91,7 @@ FeatureView<dtype>::FeatureView(FeatureSet<dtype>* feature_set,
     }
   }
   LoadRequiredPatches();
+  std::cout << "Exited the for loop!" << std::endl;
 }
 
 template <typename dtype>
@@ -104,7 +109,8 @@ FeatureView<dtype>::FeatureView(
     req_patches_.emplace(image_name, std::vector<colmap::point2D_t>(0));
   }
   for (const colmap::point3D_t& point3D_id : point3D_ids) {
-    const colmap::Track& track = reconstruction->Point3D(point3D_id).Track();
+    ///const colmap::Track& track = reconstruction->Point3D(point3D_id).Track();
+    const colmap::Track& track = reconstruction->Point3D(point3D_id).track;
     for (auto& track_el : track.Elements()) {
       colmap::image_t image_id = track_el.image_id;
       req_patches_[image_id_to_name_[image_id]].push_back(track_el.point2D_idx);
