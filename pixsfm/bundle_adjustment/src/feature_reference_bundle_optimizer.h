@@ -123,7 +123,7 @@ int FeatureReferenceBundleOptimizer::AddResiduals(
   if (constant_pose) {
     ceres::CostFunction* cost_function =
         CreateFeatureReferenceConstantPoseCostFunctor<CHANNELS, N_NODES, -1>(
-            camera.model_id, qvec_data, tvec_data,
+            static_cast<int>(camera.model_id), qvec_data, tvec_data,
             feature_view.GetFeaturePatch(image_id, point2D_idx),
             references.at(point3D_id).DescriptorData(),
             references.at(point3D_id).NodeOffsets3DData(),

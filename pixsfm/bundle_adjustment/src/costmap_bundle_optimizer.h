@@ -109,7 +109,7 @@ int CostMapBundleOptimizer::AddResiduals(const colmap::image_t image_id,
   if (constant_pose) {
     ceres::CostFunction* cost_function =
         CreateFeatureReferenceConstantPoseCostFunctor<CHANNELS, 1, -1>(
-            camera.model_id, qvec_data, tvec_data,
+            static_cast<int>(camera.model_id), qvec_data, tvec_data,
             feature_view.GetFeaturePatch(image_id, point2D_idx),
             nullptr,  // Just minimize
             nullptr, interpolation_config_);
@@ -118,7 +118,7 @@ int CostMapBundleOptimizer::AddResiduals(const colmap::image_t image_id,
   } else {
     ceres::CostFunction* cost_function =
         CreateFeatureReferenceCostFunctor<CHANNELS, 1, -1>(
-            camera.model_id,
+            static_cast<int>(camera.model_id),
             feature_view.GetFeaturePatch(image_id, point2D_idx),
             nullptr,  // Just minimize
             nullptr, interpolation_config_);

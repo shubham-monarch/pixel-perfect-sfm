@@ -94,7 +94,7 @@ struct FeatureReferenceCostFunctor {
                                      const double* node_offsets3D = NULL) {
     return (new ceres::AutoDiffCostFunction<FeatureReferenceCostFunctor,
                                             N_RESIDUALS, 4, 3, 3,
-                                            CameraModel::kNumParams>(
+                                            CameraModel::num_params>(
         new FeatureReferenceCostFunctor(patch, interpolation_config,
                                         reference_descriptor, node_offsets3D)));
   }
@@ -185,7 +185,7 @@ struct FeatureReferenceConstantPoseCostFunctor
     return (
         new ceres::AutoDiffCostFunction<FeatureReferenceConstantPoseCostFunctor,
                                         N_RESIDUALS, 3,
-                                        CameraModel::kNumParams>(
+                                        CameraModel::num_params>(
             new FeatureReferenceConstantPoseCostFunctor(
                 patch, interpolation_config, qvec, tvec, reference_descriptor,
                 node_offsets3D)));

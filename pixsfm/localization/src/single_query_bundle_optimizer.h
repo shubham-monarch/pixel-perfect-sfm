@@ -118,7 +118,7 @@ bool SingleQueryBundleOptimizer::RunQuery(
     }
 
     QueryBO::AddFeatureReferenceResidual<CHANNELS, N_NODES>(
-        &problem, camera.model_id, &camera.params[0], qvec.data(),
+        &problem, static_cast<int>(camera.model_id), &camera.params[0], qvec.data(),
         tvec.data(), points3D[idx].data(), references[idx].data(), NULL,
         fmap.GetFeaturePatch(patch_idx), loss_function);
     problem.SetParameterBlockConstant(points3D[idx].data());
@@ -159,7 +159,7 @@ bool SingleQueryBundleOptimizer::RunQuery(
 
     for (auto& descr : references[idx]) {
       QueryBO::AddFeatureReferenceResidual<CHANNELS, N_NODES>(
-          &problem, camera.model_id, &camera.params[0], qvec.data(),
+          &problem, static_cast<int>(camera.model_id), &camera.params[0], qvec.data(),
           tvec.data(), points3D[idx].data(), descr.data(), NULL,
           fmap.GetFeaturePatch(patch_idx), loss_function);
     }
@@ -199,14 +199,14 @@ bool SingleQueryBundleOptimizer::RunQuery(
 
     if (!references[idx].HasObservations()) {
       QueryBO::AddFeatureReferenceResidual<CHANNELS, N_NODES>(
-          &problem, camera.model_id, &camera.params[0], qvec.data(),
+          &problem,static_cast<int>(camera.model_id), &camera.params[0], qvec.data(),
           tvec.data(), points3D[idx].data(), references[idx].DescriptorData(),
           references[idx].NodeOffsets3DData(), fmap.GetFeaturePatch(patch_idx),
           loss_function);
     } else {
       for (auto& descr : references[idx].observations) {
         QueryBO::AddFeatureReferenceResidual<CHANNELS, N_NODES>(
-            &problem, camera.model_id, &camera.params[0], qvec.data(),
+            &problem, static_cast<int>(camera.model_id), &camera.params[0], qvec.data(),
             tvec.data(), points3D[idx].data(), descr.data(), NULL,
             fmap.GetFeaturePatch(patch_idx), loss_function);
       }

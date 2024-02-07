@@ -219,8 +219,8 @@ double CostMapExtractor::RunSubset(
           );
         */
 
-        auto camera_  = reconstruction.Camera(image.camera_id_);
-        auto pt_3D_   = reconstruction.Point3D(p2D.point3D_id).xyz;
+        auto &camera_  = reconstruction.Camera(image.CameraId());
+        auto &pt_3D_   = reconstruction.Point3D(p2D.point3D_id).xyz;
         auto P_       = image.CamFromWorld();
         Eigen::Vector2d xy = camera_.ImgFromCam((P_ * pt_3D_).hnormalized());
 
@@ -424,8 +424,8 @@ FeatureSet<dtype_o> CostMapExtractor::CreateShallowCostmapFSet(
             image.CamFromWorld(),
             reconstruction.Camera(image.camera_id_)
           );*/
-          auto camera_  = reconstruction.Camera(image.camera_id_);
-          auto pt_3D_   = reconstruction.Point3D(p2D.point3D_id).xyz;
+          auto &camera_  = reconstruction.Camera(image.CameraId());
+          auto &pt_3D_   = reconstruction.Point3D(p2D.point3D_id).xyz;
           auto P_       = image.CamFromWorld();
           Eigen::Vector2d xy = camera_.ImgFromCam((P_ * pt_3D_).hnormalized());
   

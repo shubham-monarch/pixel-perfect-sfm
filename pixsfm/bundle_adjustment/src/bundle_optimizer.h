@@ -422,24 +422,27 @@ void BundleOptimizer<Derived>::ParameterizeCameras(
     }
     colmap::Camera& camera = reconstruction->Camera(camera_id);
 
-    if (constant_camera || setup_.SetConstantCamIntrinsics(camera_id)) {
+    if (constant_camera || setup_.HasConstantCamIntrinsics(camera_id)) {
       problem_->SetParameterBlockConstant(&camera.params[0]);
       continue;
     } else {
       std::vector<int> const_camera_params;
 
       if (!options_.refine_focal_length) {
-        const std::vector<size_t>& params_idxs = camera.FocalLengthIdxs();
+        //const std::vector<size_t>& params_idxs = camera.FocalLengthIdxs();
+        const std::vector<size_t>params_idxs(camera.FocalLengthIdxs().begin(), camera.FocalLengthIdxs().end());
         const_camera_params.insert(const_camera_params.end(),
                                    params_idxs.begin(), params_idxs.end());
       }
       if (!options_.refine_principal_point) {
-        const std::vector<size_t>& params_idxs = camera.PrincipalPointIdxs();
+        //const std::vector<size_t>& params_idxs = camera.PrincipalPointIdxs();
+        const std::vector<size_t>params_idxs(camera.PrincipalPointIdxs().begin(), camera.PrincipalPointIdxs().end());
         const_camera_params.insert(const_camera_params.end(),
                                    params_idxs.begin(), params_idxs.end());
       }
       if (!options_.refine_extra_params) {
-        const std::vector<size_t>& params_idxs = camera.ExtraParamsIdxs();
+        //const std::vector<size_t>& params_idxs = camera.ExtraParamsIdxs();
+        const std::vector<size_t>params_idxs(camera.ExtraParamsIdxs().begin(), camera.ExtraParamsIdxs().end());
         const_camera_params.insert(const_camera_params.end(),
                                    params_idxs.begin(), params_idxs.end());
       }
