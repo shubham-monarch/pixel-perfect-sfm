@@ -72,10 +72,10 @@ sudo chmod +x rig_ba_script.sh
 sudo ./rig_ba_script
 ```
 
-This would call `COLMAP`'s `rig_bundle_adjuster` api on the previously generated **sparse model** and generate the **rig-bundle-adjusted-sparse** model at the `OUTPUT_PATH` specified in [rig_ba_script.sh](rig_ba_script.sh). 
+This would call `COLMAP`'s `rig_bundle_adjuster` api on the previously generated **sparse model** and generate the **rig-bundle-adjusted-sparse** model at the `OUTPUT_PATH` specified in [rig_ba.sh](rig_ba.sh). 
 
 ### Manually scaling the model 
-Currently, running the [rig_ba_script.sh](rig_ba_script.sh) would also scale the model by a **hard-coded scaling factor**.
+Currently, running the [rig_ba.sh](rig_ba.sh) script would also scale the model by a **hard-coded scaling factor**.
 >[TO-DO]: add python bindings for scaling factor in `pycolmap`.
 
 ### Dense reconstruction  
@@ -93,7 +93,7 @@ export OUTPUT_PATH=$HOME/dense_model
 colmap image_undistorter --image_path $IMAGE_PATH --input_path $INPUT_PATH --output_path $OUTPUT_PATH
 ```
 
-- Replace the `run-colmap-geometric.sh` file inside the `$HOME/dense_model` folder with the one inside the `pixSFM` folder
+- Replace the `run-colmap-geometric.sh` file inside the `$HOME/dense_model` folder with the [one](run-colmap-geometric.sh) inside the `pixSFM` folder
 
 ```
 cp ~/pixel-perfect-sfm/run-colmap-geometric.sh ~/dense_model/
@@ -106,5 +106,5 @@ sudo chmod +x run-colmap-geometric.sh
 sudo ./run-colmap-geometric.sh
 ```
 
-This would generate the **dense**pointcloud file named `fused.ply` inside the `dense_model` folder. 
+This would generate the **dense** pointcloud file named `fused.ply` inside the `dense_model` folder. 
 
