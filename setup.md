@@ -40,14 +40,16 @@ pip install -e .
 
 ### Folder Setup
 -  Create folders named `left` and `right` at the `images` location specified in [stereo_dense.ipynb](stereo_dense.ipynb) notebook and move/copy the corresponding **masked** images to the respective folders.
-> Currently, `images` folder points to `pixSFM/datasets/monarch/` 
-> If the tractor hood is not masked in the input images, one can use the `draw_box_around_tractor_hood` function in [stereo_dense.ipynb](stereo_dense.ipynb) to mask the images.
+> Currently, `images` folder points to `pixel-perfect-sfm/datasets/monarch/` 
+> If the tractor hood is **not masked** in the input images, one can use the `draw_box_around_tractor_hood` function in [stereo_dense.ipynb](stereo_dense.ipynb) to mask the images.
 
 ### Running Sparse Reconstruction
 
 Run the [stereo_dense.ipynb](stereo_dense.ipynb) notebook to generate the sparse model. 
-> The model output location specified inside the `sfm.reconstruction` function. It is currently set to the `ref_dir_locked` variable.
+> The sparse model's **output location** is specified inside the `sfm.reconstruction` function. It is currently set to the `ref_dir_locked` variable.
+
 > Camera instrinsics optimization has been locked. 
+
 > Same camera intrinsics is being shared for all the images in a sub-folder i.e. all the images in the `left` folder share the same camera intrinsics and all the images in the `right` folder share the same camera intrinsics
 
 This would generate the **sparse** model at the specified ouput location. 
