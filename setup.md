@@ -22,7 +22,7 @@ cd Hierarchical-Localization/
 python -m pip install -e .
 ```
 
-##### PixSFM SetUp
+##### PixSFM 
 ```
 # install COLMAP following colmap.github.io/install.html#build-from-source, tag 3.8
 sudo apt-get install libhdf5-dev
@@ -68,7 +68,7 @@ cp ~/pixel-perfect-sfm/rig_ba.sh .
   - `INPUT_PATH` (provide the path to the **sparse model**, defaults to `$HOME/pixel-perfect-sfm/outputs/monarch-demo/ref-locked/`)
   - `OUTPUT_PATH` (defaults to the current folder i.e. `$PWD`)
 
-- Finally execute the `rig_ba.sh` script from inside the `rig_ba_model` folder 
+- Finally execute the `rig_ba.sh` script from inside the `rig_ba_model` folder: 
 ```
 sudo chmod +x rig_ba_script.sh
 sudo ./rig_ba_script
@@ -95,7 +95,7 @@ export OUTPUT_PATH=$HOME/dense_model
 colmap image_undistorter --image_path $IMAGE_PATH --input_path $INPUT_PATH --output_path $OUTPUT_PATH
 ```
 
-- Replace the `run-colmap-geometric.sh` file inside the `$HOME/dense_model` folder with the [one](run-colmap-geometric.sh) inside the `pixSFM` folder
+- Replace the `run-colmap-geometric.sh` file inside the `$HOME/dense_model` folder with the [one](run-colmap-geometric.sh) inside the `~/pixel-perfect-sfm` folder
 
 ```
 cp ~/pixel-perfect-sfm/run-colmap-geometric.sh ~/dense_model/
