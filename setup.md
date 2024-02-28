@@ -1,6 +1,3 @@
-> [TO-DO] => check relative links accuracy
-> [TO-DO] => update run-colmap-geometric.sh
-> [TO-DO] => Add instructions to update path in.sh files
 ### Software Setup
 
 ##### COLMAP 
