@@ -45,28 +45,31 @@ pip install -e .
 
 ### Running Sparse Reconstruction
 
-Run the [stereo_dense.ipynb](stereo_dense.ipynb) notebook to generate the sparse model. 
+Run the [stereo_dense.ipynb](stereo_dense.ipynb) notebook to generate the sparse model. This would generate the **sparse** model at the specified output location i.e. `ref_dir_locked`
+ 
 > The sparse model's **output location** is specified inside the `sfm.reconstruction` function. It is currently set to the `ref_dir_locked` variable.
 
-> Camera instrinsics optimization has been locked. 
+> Camera instrinsics' optimization has been **locked**. 
 
-> Same camera intrinsics is being shared for all the images in a sub-folder i.e. all the images in the `left` folder share the same camera intrinsics and all the images in the `right` folder share the same camera intrinsics
+> Same camera intrinsics is being **shared** for all the images in a **sub-folder** i.e. all the images in the `left` folder share the same camera intrinsics amongst each other and all the images in the `right` folder share the same camera intrinsics amongst each other.
 
-This would generate the **sparse** model at the specified ouput location. 
 
 ### Running Rig Bundle Adjustment 
 - Create a folder named `rig_ba_model` at the `HOME` location:
-- Copy [rig.json](rig.json) to this folder.
-- Copy [rig_ba.sh](rig_ba.sh) to this folder and **update** the follwing variables in the **script**:
-  - `COLMAP_EXE_PATH` (default to `/usr/bin/colmap`)
-  - `INPUT_PATH` (provide the path to the **sparse model**, defaults to `$HOME/pixel-perfect-sfm/outputs/monarch-demo/ref-locked/`)
-  - `OUTPUT_PATH` (defaults to the current folder i.e. `$PWD`)
-- Finally execute the `rig_ba.sh` script from inside the `rig_ba_model` folder 
+- Copy [rig.json](rig.json) and [rig_ba.sh](rig_ba.sh) to this folder.
 ```
 cd $HOME
 mkdir rig_ba_model && cd rig_ba_model
 cp ~/pixel-perfect-sfm/rig.json .
 cp ~/pixel-perfect-sfm/rig_ba.sh .
+```
+- Update the follwing variables in `rig_ba.sh`:
+  - `COLMAP_EXE_PATH` (default to `/usr/bin/colmap`)
+  - `INPUT_PATH` (provide the path to the **sparse model**, defaults to `$HOME/pixel-perfect-sfm/outputs/monarch-demo/ref-locked/`)
+  - `OUTPUT_PATH` (defaults to the current folder i.e. `$PWD`)
+
+- Finally execute the `rig_ba.sh` script from inside the `rig_ba_model` folder 
+```
 sudo chmod +x rig_ba_script.sh
 sudo ./rig_ba_script
 ```
