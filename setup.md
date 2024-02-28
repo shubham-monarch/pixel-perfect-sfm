@@ -76,6 +76,8 @@ sudo ./rig_ba_script
 
 This would call `COLMAP`'s `rig_bundle_adjuster` api on the previously generated **sparse model** and generate the **rig-bundle-adjusted-sparse** model at the `OUTPUT_PATH` specified in [rig_ba.sh](rig_ba.sh). 
 
+We can now run the [rel_pose_calc.ipynb](rel_pose_calc.ipynb) notebook to **compare** the **relative** camera poses **before** and **after** running the `rig_bundle_adjuster`.
+
 ### Manually scaling the model 
 Currently, running the [rig_ba.sh](rig_ba.sh) script would also scale the model by a **hard-coded scaling factor**.
 >[TO-DO]: add python bindings for scaling factor in `pycolmap`.
