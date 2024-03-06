@@ -6,12 +6,14 @@
       {
           "camera_id": 1,
           "image_prefix": "left",
-          "rel_tvec": [0, 0, 0]
+          "rel_tvec": [-6, 0, 0],
+	  "rel_qvec": [0,0,0,1]
       },
       {
           "camera_id": 2,
           "image_prefix": "right",
-          "rel_tvec": [1200, 0, 0]
+          "rel_tvec": [6, 0, 0],
+	  "rel_qvec": [0,0,0,1]
       }
     ]
   }
