@@ -39,7 +39,7 @@ pip install -e .
 ```
 
 ### Folder Setup
--  Create folders named `left` and `right` at the `images` location specified in [stereo_dense.ipynb](stereo_dense.ipynb) notebook and move/copy the corresponding **masked** images to the respective folders.
+-  Create folders named `left` and `right` at the `images` location specified in [stereo_dense.ipynb](stereo_dense.ipynb) notebook and move/copy the corresponding **masked** images to the respective folders. It is important to make sure that the corresponding images/frames have the **same names** in the `left`/`right` folder.  
 > Currently, `images` folder points to `pixel-perfect-sfm/datasets/monarch/` 
 > If the tractor hood is **not masked** in the input images, one can use the `draw_box_around_tractor_hood` function in [stereo_dense.ipynb](stereo_dense.ipynb) to mask the images.
 
