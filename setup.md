@@ -39,13 +39,13 @@ pip install -e .
 ```
 
 ### Folder Setup
--  Create folders named `left` and `right` at the `images` location specified in [stereo_dense.ipynb](stereo_dense.ipynb) notebook and move/copy the corresponding **masked** images to the respective folders. It is important to make sure that the corresponding images/frames have the **same names** in the `left`/`right` folder.  
+-  Create folders named `left` and `right` at the `images` location specified in [sparse_reconstruction.ipynb](sparse_reconstruction.ipynb) notebook and move/copy the corresponding **masked** images to the respective folders. It is important to make sure that the corresponding images/frames have the **same names** in the `left`/`right` folder.  
 > Currently, `images` folder points to `pixel-perfect-sfm/datasets/monarch/` 
-> If the tractor hood is **not masked** in the input images, one can use the `draw_box_around_tractor_hood` function in [stereo_dense.ipynb](stereo_dense.ipynb) to mask the images.
+> If the tractor hood is **not masked** in the input images, one can use the `draw_box_around_tractor_hood` function in [sparse_reconstruction.ipynb](sparse_reconstruction.ipynb) to mask the images.
 
 ### Running Sparse Reconstruction
 
-Run the [stereo_dense.ipynb](stereo_dense.ipynb) notebook to generate the sparse model. This would generate the **sparse** model at the specified output location i.e. `ref_dir_locked`
+Run the [sparse_reconstruction.ipynb](sparse_reconstruction.ipynb) notebook to generate the sparse model. This would generate the **sparse** model at the specified output location i.e. `ref_dir_locked`
  
 > The sparse model's **output location** is specified inside the `sfm.reconstruction` function. It is currently set to the `ref_dir_locked` variable.
 
