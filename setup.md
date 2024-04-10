@@ -4,8 +4,7 @@
 
 ```
 git clone --recursive git@github.com:shubham-monarch/colmap.git
-#scale factor hard-coded
-git checkout d4202d2438af52ea8dbf505bc069b786ea48d1a1
+git checkout rig-ba-setup
 cd colmap 
 mkdir build && cd build 
 cmake .. -DCMAKE_CUDA_ARCHITECTURES=all -GNinja
