@@ -29,6 +29,7 @@ class PixSfM(PixSfM_colmap):
             pairs_path: Path,
             features_path: Path,
             matches_path: Path,
+            gps_priors_path: Optional[Path] = None,
             reference_model_path: Optional[Path] = None,
             cache_path: Optional[Path] = None,
             feature_manager: Optional[FeatureManager] = None,
@@ -49,7 +50,7 @@ class PixSfM(PixSfM_colmap):
 
         model_path = self.run_reconstruction(
                 output_dir, image_dir, pairs_path, keypoints_path,
-                matches_path, reference_model_path,
+                matches_path, gps_priors_path, reference_model_path,
                 **hloc_args)
 
         reconstruction = pycolmap.Reconstruction(str(model_path))
@@ -98,6 +99,7 @@ class PixSfM(PixSfM_colmap):
             pairs_path: Path,
             keypoints_path: Path,
             matches_path: Path,
+            gps_priors_path: Optional[Path] = None,
             reference_model_path: Optional[Path] = None,
             **hloc_args):
         if hloc is None:
@@ -107,7 +109,7 @@ class PixSfM(PixSfM_colmap):
         if reference_model_path is None:
             hloc.reconstruction.main(
                 model_path, image_dir, pairs_path, keypoints_path,
-                matches_path, **hloc_args)
+                matches_path, gps_priors_path = gps_priors_path,  **hloc_args)
         else:
             hloc.triangulation.main(
                 model_path, reference_model_path, image_dir, pairs_path,
@@ -137,11 +139,13 @@ class PixSfM(PixSfM_colmap):
             pairs_path: Path,
             features_path: Path,
             matches_path: Path,
+            gps_priors: Optional[Path] = None,
             cache_path: Optional[Path] = None,
             feature_manager: Optional[FeatureManager] = None,
             **hloc_args):
         return self.run(
             output_dir, image_dir, pairs_path, features_path, matches_path,
+            gps_priors_path = gps_priors,
             reference_model_path=None, cache_path=cache_path,
             feature_manager=feature_manager, **hloc_args)
 
