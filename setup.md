@@ -1,5 +1,13 @@
 ### Software Setup
 
+> Recommended to setup a virtual environment (say using venv) before proceeding
+
+```
+python -m venv e6
+source ~/e6/bin/activate
+
+```
+
 ##### COLMAP 
 
 ```
