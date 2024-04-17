@@ -5,7 +5,6 @@
 ```
 python -m venv e6
 source ~/e6/bin/activate
-
 ```
 
 ##### COLMAP 
