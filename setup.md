@@ -6,8 +6,8 @@
 git clone --recursive git@github.com:shubham-monarch/colmap.git
 git checkout rig-ba-setup
 cd colmap 
-mkdir build && cd build 
-cmake .. -DCMAKE_CUDA_ARCHITECTURES=all -GNinja
+mkdir build && cd build
+cmake .. -DCMAKE_CUDA_ARCHITECTURES=all -DCMAKE_INSTALL_PREFIX=/usr/local/ -GNinja  
 ninja
 sudo ninja install 
 ```
